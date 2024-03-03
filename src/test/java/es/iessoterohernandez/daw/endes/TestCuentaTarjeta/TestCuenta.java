@@ -1,49 +1,52 @@
 package es.iessoterohernandez.daw.endes.TestCuentaTarjeta;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class TestCuenta {
+class TestCuenta {
 	
 	private Cuenta cuenta;
 
 	@BeforeEach
 	public void init() {
-		cuenta = new Cuenta("0001", "Raúl Benítez");
+		cuenta = new Cuenta("0", "Raúl Benítez");
 	}
 	
 	@Test
-	public void testIngresarDinero() {
-		Movimiento m=new Movimiento();
-		m.setImporte(2000);
-		assertEquals(2000, m.getImporte());
+	public void testIngresar() throws Exception {
+		cuenta.ingresar(1000.0);
+		assertEquals(1000.0, cuenta.getSaldo());
 	}
 	
 	@Test
-	public void testRetirarDinero() {
-		
+	public void testRetirar() throws Exception {
+		cuenta.ingresar(2000.0);
+		cuenta.retirar(1000.0);
+		assertEquals(1000.0, cuenta.getSaldo());
+	}
+
+	@Test
+	public void testIngresarConConcepto() throws Exception {
+		cuenta.ingresar("Nómina Enero 2023", 1000.0);
+		assertEquals(1000.0, cuenta.getSaldo());
+	}
+
+	@Test
+	public void testRetirarConConcepto() throws Exception {
+		cuenta.ingresar("Nómina Junio + Paga Extra", 2000.0);
+		cuenta.retirar(1000.0);
+		assertEquals(1000.0, cuenta.getSaldo());
 	}
 	
-	@Test
-	public void testIngresarDineroConConcepto() {
-		
-	}
-	
-	@Test
-	public void testRetirarDineroConConcepto() {
-		
-	}
-	
-	@Test
-	public void testAñadirMovimiento() {
-		
-	}
-	
-	@Test
-	public void testGetSaldo() {
-		
-	}
+    @Test
+    public void testSaldoDespuesAgregarMovimiento() {
+        Movimiento movimiento = new Movimiento();
+        movimiento.setConcepto("Nómina Noviembre");
+        movimiento.setImporte(1000.0);
+        cuenta.addMovimiento(movimiento);
+        assertEquals(1000.0, cuenta.getSaldo());
+    }
 
 }
